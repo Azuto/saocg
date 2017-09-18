@@ -1,2 +1,8 @@
-# saocg
-SAO Card Generator based on juncaixinchi's FGO Card Generator
+## [SAO Card Generator](https://azuto.github.io/saogc/sao.html)
+Card frame rendered from SAO: Progress Link
+Default background from SAO: Memory Defrag
+
+## Background
+juncaixinchi's original generator can be found [here](https://juncaixinchi.github.io/FGO/fgo.html)
+
+Original source code can be found [here](https://github.com/juncaixinchi/FGO)

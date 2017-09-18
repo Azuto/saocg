@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset = "utf-8">
+  <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+  <title>FGO Card Generator</title>
+  <style type = "text/css">
+    body{
+      background: linear-gradient(-45deg, #F2F2F2 25%, #F5F5F5 0, #F5F5F5 50%, #F2F2F2 0, #F2F2F2 75%, #F5F5F5 0);
+      background-size: 100px 100px;
+    }
+    #main-container
+    {
+      background: linear-gradient(45deg, #F2F2F2 25%, #F5F5F5 0, #F5F5F5 50%, #F2F2F2 0, #F2F2F2 75%, #F5F5F5 0);
+      background-size: 100px 100px;
+      border: 1px solid #E0E0E0;
+      position: relative;
+      padding-top: 40px;
+      padding-bottom: 10px;
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      margin: 0 auto;
+    }
+    #Canvas-container
+    {
+      position: relative;
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    @font-face {
+      font-family: FGO;
+      src: url('Font/SAOUI.ttf') format("truetype"); 
+    }
+    .toggle {
+      position: absolute;
+      visibility: hidden;
+    }
+    .toggle + label {
+      max-width: 250px;      
+      width: 100%;
+      height: 39px;
+      margin: 0 auto;
+      display: block;
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      user-select: none;
+      margin-bottom: 20px;
+    }
+    .toggle + label:before, .toggle + label:after {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      color: #fff;
+      text-align: center;
+      line-height: 39px;
+    }
+    .toggle + label:after {
+      background-color: #1abc9c;
+      content: attr(data-on);
+      transition: transform 0.5s;
+      transform: rotateY(180deg);
+      backface-visibility: hidden;
+    }
+    .toggle + label:before {
+      background-color: #dddddd;
+      content: attr(data-off);
+      transition: transform 0.5s;
+      backface-visibility: hidden;
+      color: black;
+    }
+    #gold + label { border: 1px solid #cacaca; }
+    #gold + label:after { background: white; color: black; }
+    #gold + label:before { background: #ffeb04; }
+    .toggle:checked + label:before {
+      transform: rotateY(180deg);
+    }
+    .toggle:checked + label:after {
+      transform: rotateY(0deg);
+    }
+    .toggle_show:checked + label + div, .toggle_show + label + div + div {
+      display: none;
+    }
+    .toggle_show:checked + label + div + div, .toggle_show + label + div {
+      display: block;
+    }
+  </style>
+  <script type = "text/javascript">
+    function preLoadImg(url) 
+    { 
+      const img = new Image(); 
+      img.src = url;
+    } 
+    function imgPreview(fileDom)
+    {
+          
+      let reader;
+      if (window.FileReader) {
+        reader = new FileReader();
+      } else {
+        alert("Your device doesn't support uploading images.");
+      }
+      
+      const file = fileDom.files[0];
+      const imageType = /^image\//g;
+      
+      if (!imageType.test(file.type)) 
+      {
+        alert("Please upload a picture!");
+        return;
+      } 
+      
+      reader.onload = function(e) 
+      {
+          
+          const img = document.getElementById("preview");
+          
+          img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+    function get_pic(id)
+    {
+      const canvas = document.getElementById(id);
+      const content = canvas.getContext("2d");
+      content.clearRect(0, 0, canvas.width, canvas.height);
+      const img_logo = new Image();
+      const img_frame = new Image();
+      let img_hero = new Image();
+      img_logo.crossOrigin = '';
+      img_hero.crossOrigin = '';
+      const Hero_rarity = document.getElementById("Hero_rarity").value || 5;
+      img_hero = document.getElementById("preview");
+      if(!img_hero.src) 
+      {
+        alert("Please upload a picture!"); return;
+      }
+      preLoadImg(img_hero.src);
+      if (document.getElementById("toggle").checked) {
+        let Hero_class = document.getElementById("Hero_class").value || "sword";
+        const Hero_name = document.getElementById("Hero_name").value || "Unknown";
+        if (Hero_rarity == 1) {
+          img_logo.src = "img/sao/" + Hero_class + "1.png";
+        } else if (Hero_rarity == 2) {
+          img_logo.src = "img/sao/" + Hero_class + "2.png";
+        } else if (Hero_rarity == 3) {
+          img_logo.src = "img/sao/" + Hero_class + "3.png";
+        } else if (Hero_rarity == 4) {
+          img_logo.src = "img/sao/" + Hero_class + "4.png";		  
+        } else {
+          img_logo.src = "img/sao/" + Hero_class + "5.png";
+        }
+        img_frame.src = "img/fgo/S" + Hero_rarity + "5.png";
+        preLoadImg(img_frame.src);
+        img_frame.onload = function()
+        {
+          content.drawImage(img_hero,0,0,640,800);
+          content.drawImage(img_frame,0,0,640,850);
+
+          const icon_pos = {
+            "Sword":				[ 32, 32 ],
+            "Dual Blade":			[ 32, 32 ],
+            "Rapier":				[ 32, 32 ],
+            "Dagger":				[ 32, 32 ],
+            "Mace":					[ 32, 32 ],
+	        "Gun":					[ 32, 32 ],
+            "Bow":					[ 32, 32 ],
+            "Rod":					[ 32, 32 ],
+            "Lance":				[ 32, 32 ],
+            "Sword and Shield":		[ 32, 32 ],			
+          }
+
+          preLoadImg(img_logo.src);
+          img_logo.onload = function () {
+            content.drawImage(img_logo,...icon_pos[Hero_class],32,32);
+            Hero_class = Hero_class.slice(0, 1).toUpperCase() + Hero_class.slice(1);
+            Hero_class = document.getElementById("Hero_subname").value || Hero_class;
+            put_text(canvas, content, Hero_class, Hero_name, false);
+          };
+        }
+        
+      
+      resize();
+    }
+    function resize(){
+      width = document.body.clientWidth;
+      if(width <= 640)
+      {
+        document.getElementById("pic_show").style.width = "100%";
+      }
+      else{
+        document.getElementById("pic_show").style.width = "640px";
+      }
+    }
+  </script>
+</head>
+<body onresize = "resize()">
+  <div id = "main-container" >
+    <div style = "font-size: 35px; text-align: center; color: green">SAO Card Generator</div> 
+    <div style = "text-align: center; font-size: 15px; padding-bottom: 20px">Original FGO Code by juncaixinchi<br>Modified to SAO by Azuto</div>
+    Rarity<br><br>
+    <select id = "Hero_rarity" style = "max-width:250px; width: 100%">
+      <option value = "1">1 ☆</option>
+      <option value = "2">2 ☆</option>
+      <option value = "3">3 ☆</option>
+      <option value = "4">4 ☆</option>
+      <option value = "5">5 ☆</option>
+    </select><br><br>
+    <div id="switch">
+        Character Name<br><br>
+        <input type = "text" id = "Hero_subname" placeholder = "Kirito" style = "max-width:250px; width: 100%"><br><br>
+        Character Title<br><br>		
+        <input type = "text" id = "Hero_name" placeholder = "Black Swordsman" style = "max-width:250px; width: 100%"><br><br>
+        Class Icon<br><br>
+        <select id = "Hero_class" style = "max-width:250px; width: 100%">
+          <option value = "sword">Sword</option>
+          <option value = "dualblades">Dual Blades</option>
+          <option value = "rapier">Rapier</option>
+          <option value = "dagger">Dagger</option>
+          <option value = "mace">Mace</option>
+          <option value = "gun">Gun</option>
+          <option value = "bow">Bow</option>
+          <option value = "rod">Rod</option>
+          <option value = "lance">Lance</option>
+          <option value = "swordandshield">Shieldblade</option>
+        </select><br><br>
+    </div>
+    Please upload the photo<br><br>
+    <input type = "file" name = "file" onchange = "imgPreview(this)" value = "上传图片">
+    <br>
+    <br>
+    <a href = "#Canvas-position"><button onclick = "get_pic('myCanvas')">Generate!</button></a>
+    <br>
+    <p style = "font-size: 10pt">Tips: For best result, please use image size of 640 x 800！</p>
+    <!--两个例子：
+    <a href = "#Canvas-position"><button onclick = "get_zhou()">生成周天王！</button></a>
+    <a href = "#Canvas-position"><button onclick = "get_lei()">生成蕾姆！</button></a> -->
+    <img id = "preview" hidden = "hidden">
+  </div>
+  <div id = "Canvas-container">
+    <a name = "Canvas-position">
+      <canvas id = "myCanvas" width = "500" height = "850" style = "border:1px solid #c3c3c3" hidden = "hidden">
+        Your browser doesn't support Canvas, please use a more modern browser!
+      </canvas>
+      <img id = "pic_show">
+    </a>
+  </div>
+ </body>
+ </html>
