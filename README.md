@@ -1,4 +1,4 @@
-## [SAO Card Generator](https://azuto.github.io/saogc/sao.html)
+## [SAO Card Generator](https://azuto.github.io/saocg/sao.html)
 Card frame rendered from SAO: Progress Link
 Default background from SAO: Memory Defrag
 
